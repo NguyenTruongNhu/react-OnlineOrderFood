@@ -10,6 +10,8 @@ import {
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../state/Authentication/Action";
+import { useDispatch } from "react-redux";
 
 const initialValues = {
   fullName: "",
@@ -18,10 +20,12 @@ const initialValues = {
   role: "",
 };
 const RegisterForm = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
     console.log("values", values);
+    dispatch(registerUser({ userData: values, navigate }));
   };
   return (
     <div>
