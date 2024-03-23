@@ -29,6 +29,7 @@ export const findCart = (token) => async (dispatch) => {
       },
     });
     dispatch({ type: FIND_CART_SUCCESS, payload: data });
+    console.log("find Cart ", data);
   } catch (error) {
     console.log("catch error ", error);
     dispatch({ type: FIND_CART_FAILURE, payload: error });
@@ -59,6 +60,7 @@ export const addItemToCart = (reqData) => async (dispatch) => {
       },
     });
     dispatch({ type: ADD_ITEM_TO_CART_SUCCESS, payload: data });
+    console.log("Add item to cart ", data);
   } catch (error) {
     console.log("catch error ", error);
     dispatch({ type: ADD_ITEM_TO_CART_FAILURE, payload: error.message });

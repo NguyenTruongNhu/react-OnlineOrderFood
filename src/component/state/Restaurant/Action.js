@@ -50,7 +50,7 @@ export const getAllRestaurant = (jwt) => async (dispatch) => {
       },
     });
     dispatch({ type: GET_ALL_RESTAURANTS_SUCCESS, payload: data });
-    console.log("all restaurant");
+    console.log("all restaurant", data);
   } catch (error) {
     console.log("catch error ", error);
     dispatch({ type: GET_ALL_RESTAURANTS_FAILURE, payload: error });

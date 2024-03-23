@@ -7,12 +7,18 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MenuCard from "./MenuCard";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getRestaurantById,
+  getRestaurantsCategory,
+} from "../state/Restaurant/Action";
+import { getMenuItemsByRestaurantId } from "../state/Menu/Action";
 
-const categories = ["pizza", "biryani", "burger", "chicken", "rice"];
 const foodTypes = [
   { label: "All", value: "all" },
   { label: "Vegetarian only", value: "vegetarian" },
@@ -20,13 +26,45 @@ const foodTypes = [
   { label: "Seasonal", value: "seasonal" },
 ];
 
-const menu = [1, 1, 1, 1, 1, 1, 1];
 const RestaurantDetails = () => {
+  const navigate = useNavigate();
+
+  const { auth, restaurant, menu } = useSelector((store) => store);
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
   const [foodType, setFoodType] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const { id, city } = useParams();
 
   const handleFilter = (e) => {
+    setFoodType(e.target.value);
     console.log(e.target.value, e.target.name);
   };
+
+  const handleFilterCategory = (e, value) => {
+    setSelectedCategory(value);
+    console.log(e.target.value, e.target.name, value);
+  };
+
+  console.log("restaurant", restaurant);
+
+  useEffect(() => {
+    dispatch(getRestaurantById({ jwt, restaurantId: id }));
+    dispatch(getRestaurantsCategory({ jwt, restaurantId: id }));
+  }, []);
+  useEffect(() => {
+    dispatch(
+      getMenuItemsByRestaurantId({
+        jwt,
+        restaurantId: id,
+        vagetarian: foodType === "vegetarian",
+        seasonal: foodType === "seasonal",
+        nonveg: foodType === "non_vegetarian",
+        foodCategory: selectedCategory,
+      })
+    );
+  }, [selectedCategory, foodType]);
   return (
     <div className="px-5 lg:px-20">
       <section>
@@ -38,14 +76,14 @@ const RestaurantDetails = () => {
             <Grid item xs={12}>
               <img
                 className="w-full h-[40vh] object-cover"
-                src="https://media.istockphoto.com/id/946138618/vi/anh/m%E1%BA%B7t-tr%C6%B0%E1%BB%9Bc-c%E1%BB%A7a-t%C3%B2a-nh%C3%A0-th%C6%B0%C6%A1ng-m%E1%BA%A1i-phong-c%C3%A1ch-c%E1%BB%95-%C4%91i%E1%BB%83n-3d-render.jpg?s=2048x2048&w=is&k=20&c=4JY-d7KH3uGIk3e94NC8WbuwsVFehi8eD90nmV0oQ2Q="
+                src={restaurant.restaurant?.images[0]}
                 alt=""
               />
             </Grid>
             <Grid item xs={12} lg={6}>
               <img
                 className="w-full h-[40vh] object-cover"
-                src="https://media.istockphoto.com/id/489803256/vi/anh/d%C6%B0%E1%BB%9Bi-%C4%91%C3%A2y-l%C3%A0-g%C3%B3c-nh%C3%ACn-c%E1%BB%A7a-gia-%C4%91%C3%ACnh-tr%E1%BA%BB-vui-v%E1%BA%BB-trong-mua-s%E1%BA%AFm.jpg?s=2048x2048&w=is&k=20&c=S12srq51-TSosCkjkMmiyH8cAjuSi2ZhrYxhHJEqhhY="
+                src={restaurant.restaurant?.images[1]}
                 alt=""
               />
             </Grid>
@@ -60,12 +98,11 @@ const RestaurantDetails = () => {
         </div>
 
         <div className="pt-3 pb-5">
-          <h1 className="text-4xl font-semibold">VietNam Fast Food</h1>
+          <h1 className="text-4xl font-semibold">
+            {restaurant.restaurant?.name}
+          </h1>
           <p className="text-gray-500 mt-1">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Necessitatibus nihil iste eum hic deserunt ex nam amet facere! Id
-            error quasi quaerat non aperiam quidem asperiores sunt impedit
-            doloremque ipsa?
+            {restaurant.restaurant?.description}
           </p>
           <div className="space-y-3 mt-3">
             <p className="text-gray-500 flex items-center gap-3">
@@ -115,16 +152,16 @@ const RestaurantDetails = () => {
 
               <FormControl className="py-10 space-y-5" component={"fieldset"}>
                 <RadioGroup
-                  onChange={handleFilter}
-                  name="food_type"
-                  value={foodType}
+                  onChange={handleFilterCategory}
+                  name="food_category"
+                  value={selectedCategory}
                 >
-                  {categories.map((item) => (
+                  {restaurant.categories.map((item) => (
                     <FormControlLabel
                       key={item}
-                      value={item}
+                      value={item.name}
                       control={<Radio />}
-                      label={item}
+                      label={item.name}
                     />
                   ))}
                 </RadioGroup>
@@ -134,8 +171,8 @@ const RestaurantDetails = () => {
         </div>
 
         <div className="space-y-5 lg:w-[80%] lg:pl-10">
-          {menu.map((item) => (
-            <MenuCard />
+          {menu.menuItems.map((item) => (
+            <MenuCard item={item} />
           ))}
         </div>
       </section>
