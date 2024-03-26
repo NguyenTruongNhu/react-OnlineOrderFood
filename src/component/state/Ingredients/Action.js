@@ -42,6 +42,7 @@ export const createIngredient =
         },
       });
       dispatch({ type: CREATE_INGREDIENT_SUCCESS, payload: res.data });
+      console.log("create Ingredient data ", res.data);
     } catch (error) {
       console.log("catch error ", error);
       dispatch({ type: CREATE_INGREDIENT_FAILURE, payload: error });
@@ -62,6 +63,7 @@ export const createIngredientCategory =
           },
         }
       );
+      console.log("created Ingre Cate ", res.data);
       dispatch({ type: CREATE_INGREDIENT_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
       console.log("catch error ", error);
@@ -83,6 +85,7 @@ export const getIngredientCategory =
         }
       );
       dispatch({ type: GET_INGREDIENT_CATEGORY_SUCCESS, payload: res.data });
+      console.log("Ingredient category data", res.data);
     } catch (error) {
       console.log("catch error ", error);
       dispatch({ type: GET_INGREDIENT_CATEGORY_FAILURE, payload: error });

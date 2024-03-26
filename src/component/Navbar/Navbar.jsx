@@ -15,7 +15,7 @@ const Navbar = () => {
     if (auth.user?.role === "ROLE_CUSTOMER") {
       navigate("/my-profile");
     } else {
-      navigate("/admin/restaurant");
+      navigate("/admin/restaurants");
     }
   };
 
@@ -52,7 +52,7 @@ const Navbar = () => {
         </div>
         <div>
           <IconButton onClick={() => navigate("/cart")}>
-            <Badge color="primary" badgeContent={cart.cart?.items.length}>
+            <Badge color="primary" badgeContent={cart.cart?.items?.length}>
               <ShoppingCartIcon sx={{ fontSize: "1.5rem" }} />
             </Badge>
           </IconButton>

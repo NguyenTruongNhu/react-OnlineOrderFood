@@ -11,6 +11,8 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
 import { getUser } from "./component/state/Authentication/Action";
 import { findCart } from "./component/state/Cart/Action";
+import Routers from "./Routers/Routers";
+import { getRestaurantByUserId } from "./component/state/Restaurant/Action";
 
 function App() {
   const dispatch = useDispatch();
@@ -22,10 +24,14 @@ function App() {
     dispatch(findCart(jwt));
   }, [auth.jwt]);
 
+  useEffect(() => {
+    dispatch(getRestaurantByUserId(auth.jwt || jwt));
+  }, [auth.user]);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <CustomerRoute />
+      <Routers />
     </ThemeProvider>
   );
 }
