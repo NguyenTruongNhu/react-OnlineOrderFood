@@ -14,7 +14,6 @@ import {
   getRestaurantById,
   getRestaurantsCategory,
 } from "../../component/state/Restaurant/Action";
-import { getMenuItemsByRestaurantId } from "../../component/state/Menu/Action";
 import { fetchRestaurantsOrder } from "../../component/state/RestaurantOrder/Action";
 
 const Admin = () => {
